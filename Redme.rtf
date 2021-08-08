@@ -1,0 +1,186 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2580
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;\red199\green200\blue201;\red26\green28\blue31;\red18\green79\blue146;
+}
+{\*\expandedcolortbl;;\cssrgb\c81961\c82353\c82745;\cssrgb\c13333\c14510\c16078;\cssrgb\c7059\c39216\c63922;
+}
+\margl1440\margr1440\vieww38200\viewh21600\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs30 \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 ## Automated ELK Stack Deployment\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 The files in this repository were used to configure the network depicted below.\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 ![](Diagrams/Project1.png)\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 These files have been tested and used to generate a live ELK deployment on Azure. They can be used to either recreate the entire deployment pictured above. Alternatively, select portions of the playbook file may be used to install only certain pieces of it, such as Filebeat.\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \'a0\'a0-install-elk.yml\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 This document contains the following details:\
+- Description of the Topologu\
+- Access Policies\
+- ELK Configuration\
+\'a0\'a0- Beats in Use\
+\'a0\'a0- Machines Being Monitored\
+- How to Use the Ansible Build\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 ### Description of the Topology\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 The main purpose of this network is to expose a load-balanced and monitored instance of DVWA, the D*mn Vulnerable Web Application.\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 Load balancing ensures that the application will be highly available, in addition to restricting access to the network.\
+- _Load balancers protects the system from Distributed-Denial-of-Service attacks by shifting attack traffic and distributing the traffic over the available resources. The advantage of a jump box is to give access to the user from a single node that can be secured and monitored, it also allows you to simplify inbound rules_\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 Integrating an ELK server allows users to easily monitor the vulnerable VMs for changes to the log files and system metrics.\
+- _What does Filebeat watch for? Log files_\
+- _What does Metricbeat record? Performance Metrics_\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 The configuration details of each machine may be found below.\
+_Note: Use the [Markdown Table Generator]({\field{\*\fldinst{HYPERLINK "http://www.tablesgenerator.com/markdown_tables"}}{\fldrslt \cf4 \strokec4 http://www.tablesgenerator.com/markdown_tables}}) to add/remove values from the table_.\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 | Name\'a0\'a0\'a0\'a0 | Function | IP Address | Operating System |\
+|----------|----------|------------|------------------|\
+| Jump Box | Gateway\'a0 | 10.0.0.4\'a0\'a0 | Linux\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0 |\
+| Web1\'a0\'a0\'a0\'a0 |Webservers| 10.0.0.6\'a0\'a0 | Linux\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0 |\
+| Web2\'a0\'a0\'a0\'a0 |Webservers| 10.0.0.5\'a0\'a0 | Linux\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0 |\
+| ELKVM1\'a0\'a0 |Monitoring| 10.1.0.4\'a0\'a0 | Linux\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0 |\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 ### Access Policies\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 The machines on the internal network are not exposed to the public Internet.\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 Only the Jump Box Provisioner machine can accept connections from the Internet. Access to this machine is only allowed from the following IP addresses:\
+- _My IPv4_\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 Machines within the network can only be accessed by ssh/Port 22.\
+- _Jump Box Provisioner:\'a0 Private IP 10.0.0.4_\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 A summary of the access policies in place can be found in the table below.\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 | Name\'a0\'a0\'a0\'a0\'a0 | Publicly Accessible | Allowed IP addresses\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0 |\
+|-----------|---------------------|-----------------------------------|\
+| Jump-box\'a0 | Yes\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0 | My IPv4\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0 |\
+| Web1\'a0\'a0\'a0\'a0\'a0 | No\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0 | 10.0.0.4\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0 |\
+| Web2\'a0\'a0\'a0\'a0\'a0 | No\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0 | 10.0.0.4\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0 |\
+| ELKVM1\'a0\'a0\'a0 | Yes\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0\'a0 | My IPv4 (P.5601), 10.0.0.4 (P.22) |\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 ### Elk Configuration\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 Ansible was used to automate configuration of the ELK machine. No configuration was performed manually, which is advantageous because it saves resources such as time and manpower.\
+- _What is the main advantage of automating configuration with Ansible? The main advantage of automating configuration with Ansible is that it automates repetitive work and provides consistency while allowing IT admins to focus on more complex work_\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 The playbook implements the following tasks:\
+- _Install\'a0{\field{\*\fldinst{HYPERLINK "http://docker.io/"}}{\fldrslt \cf4 \strokec4 docker.io}}, python3.pip and docker module_\
+- _Increase Virtual memory_\
+- _Use more memory_\
+- _Download and Launch a docker elk container\
+- _Enable docker on boot_\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 The following screenshot displays the result of running `docker ps` after successfully configuring the ELK instance.\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 ![](Diagrams/Single row docker ps.JPG)	\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 ### Target Machines & Beats\
+This ELK server is configured to monitor the following machines:\
+- _Web1 10.0.0.6_\
+- _Web2 10.0.0.7_\
+- _Web3 10.0.0.5_\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 We have installed the following Beats on these machines:\
+- _Filebeat_\
+- _Metricbeat_\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 These Beats allow us to collect the following information from each machine:\
+- _Filebeat monitors the log files or locations that you specify, collects log events, and forwards them either to Elasticsearch or Logstash for indexing_\
+- _Metricbeat periodically collects metrics from the operating system and from services running on the server_\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 ### Using the Playbook\
+In order to use the playbook, you will need to have an Ansible control node already configured. Assuming you have such a control node provisioned:\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 SSH into the control node and follow the steps below:\
+- _Copy the filebeat-playbook.yml and metricbeat-playbook.yml file to /etc/ansible/roles_\
+- _Update the /etc/ansible/hosts file to include\
+- _[webservers]\
+- _10.0.0.6 ansible_python_interpreter=/usr/bin/python3_\
+- _10.0.0.5 ansible_python_interpreter=/usr/bin/python3_\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 - _[elk]\
+- _10.1.0.4 ansible_python_interpreter=/usr/bin/python3_\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 - Run the playbook, and navigate to\'a0{\field{\*\fldinst{HYPERLINK "http://52.147.175.204:5601/app/kibana"}}{\fldrslt \cf4 \strokec4 http://52.147.175.204:5601/app/kibana}}\'a0to check that the installation worked as expected.\
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 Answer the following questions to fill in the blanks:_\
+- _Which file is the playbook? Where do you copy it? Install-elk.yml , it is in the docker container in /etc/ansible_\
+- _Which file do you update to make Ansible run the playbook on a specific machine? /etc/ansible/hosts _\
+- _How do I specify which machine to install the ELK server on versus which to install Filebeat on? they are separated on the /etc/ansible/hosts under [webservers] and [elk]_\
+- _Which URL do you navigate to in order to check that the ELK server is running?\'a0{\field{\*\fldinst{HYPERLINK "http://52.147.175.204:5601/app/kibana"}}{\fldrslt \cf4 \strokec4 http://52.147.175.204:5601/app/kibana\
+}}\pard\pardeftab720\partightenfactor0
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 _As a **Bonus**, provide the specific commands the user will need to run to download the playbook, update the files, etc._\
+	\
+	ansible-playbook /etc/ansible/install-elk.yml}
